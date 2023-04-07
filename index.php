@@ -22,6 +22,7 @@
             $tab = $_GET["tab"];
 
             if ($tab == "overview") { ?>
+                <canvas id="chart_all" width = "1800" height="450"></canvas>
                 <div class="tableau">
                     <div class = "capteur">
                         <img src="images/temp.png" alt="image">
@@ -179,4 +180,12 @@
 
     </script>
     <script src="histo.js"></script>
+    <?php
+    if($tab == "overview"){
+        ?>  
+            <script src="all_histo.js"></script>
+        <?php
+    }
+    ?>
+    
 </html>
