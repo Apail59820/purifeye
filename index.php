@@ -22,7 +22,7 @@
             $tab = $_GET["tab"];
 
             if ($tab == "overview") { ?>
-                <canvas id="chart_all" width = "1800" height="450"></canvas>
+                <canvas id="chart_all" style="width: 100%; height: 550px;"></canvas>
                 <div class="tableau">
                     <div class = "capteur">
                         <img src="images/temp.png" alt="image">
