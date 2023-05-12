@@ -10,34 +10,34 @@ var backgroundColor;
 
 if(subtype == "temperature"){
     indexName = "Température (°C)";
-    fetchUrl = "http://localhost:8080/api/entries/temperature";
+    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/temperature";
     borderColor = 'rgb(255, 99, 132)';
     backgroundColor = 'rgba(255, 99, 132, 0.2)';
 }
 else if(subtype == "humidity"){
-    fetchUrl = "http://localhost:8080/api/entries/humidity";
+    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/humidity";
 }
 else if(subtype == "co2"){
     indexName = "CO2 (ppm)";
-    fetchUrl = "http://localhost:8080/api/entries/CO2";
+    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/CO2";
     borderColor = 'rgb(255, 192, 0)';
     backgroundColor = 'rgba(255, 192, 0, 0.2)';
 }
 else if(subtype == "no2"){
     indexName = "NO2 (ppm)";
-    fetchUrl = "http://localhost:8080/api/entries/NO2";
+    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/NO2";
     borderColor = 'rgb(255, 159, 64)';
     backgroundColor = 'rgba(255, 159, 64, 0.2)';
 }
 else if(subtype == "cov"){
     indexName = "COV (ppb)";
-    fetchUrl = "http://localhost:8080/api/entries/COV";
+    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/COV";
     borderColor = 'rgb(153, 102, 255)';
     backgroundColor = 'rgba(153, 102, 255, 0.2)';
 }
 else if(subtype == "pm"){
     indexName = "Particules Fines (µg/m³)";
-    fetchUrl = "http://localhost:8080/api/entries/PM";
+    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/PM";
     borderColor = 'rgb(75, 192, 192)';
     backgroundColor = 'rgba(75, 192, 192, 0.2)';
 }
@@ -157,7 +157,7 @@ function computeStats(data, startTimestamp, endTimestamp) {
 
 function loadDBValues() {
 
-    fetch("http://localhost:8080/api/entries/temperature")
+    fetch("https://purifeye-app.herokuapp.com/api/entries/temperature")
         .then(response => response.json())
         .then(dbData => {
             const tData = dbData.map(row => {

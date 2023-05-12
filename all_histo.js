@@ -8,7 +8,7 @@ var pmData = [];
 
 async function fetch_temp() {
 
-    const response = await fetch("http://localhost:8080/api/entries/temperature");
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/temperature");
     const dbData = await response.json();
     const tData = dbData.map(row => {
       return {
@@ -25,7 +25,7 @@ async function fetch_temp() {
 
 async function fetch_hum() {
     
-    const response = await fetch("http://localhost:8080/api/entries/humidity");
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/humidity");
     const dbData = await response.json();
     const tData = dbData.map(row => {
       return {
@@ -41,7 +41,7 @@ async function fetch_hum() {
 
 async function fetch_co2() {
     
-    const response = await fetch("http://localhost:8080/api/entries/CO2");
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/CO2");
     const dbData = await response.json();
     const tData = dbData.map(row => {
       return {
@@ -57,7 +57,7 @@ async function fetch_co2() {
 
 async function fetch_no2() {
     
-    const response = await fetch("http://localhost:8080/api/entries/NO2");
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/NO2");
     const dbData = await response.json();
     const tData = dbData.map(row => {
       return {
@@ -73,7 +73,7 @@ async function fetch_no2() {
 
 async function fetch_cov() {
     
-    const response = await fetch("http://localhost:8080/api/entries/COV");
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/COV");
     const dbData = await response.json();
     const tData = dbData.map(row => {
       return {
@@ -89,7 +89,7 @@ async function fetch_cov() {
 
 async function fetch_pm() {
     
-    const response = await fetch("http://localhost:8080/api/entries/PM");
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM");
     const dbData = await response.json();
     const tData = dbData.map(row => {
       return {
