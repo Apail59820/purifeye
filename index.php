@@ -1,3 +1,40 @@
+<?php
+    if(isset($_SESSION['auth']) && !empty($_SESSION['auth']))
+    {
+        $servername = "eu-cdbr-west-03.cleardb.net"; 
+        $username = "b5b39d52f466ad"; 
+        $password = "eab3317c"; 
+        $dbname = "heroku_56366cbee5ccd56";
+
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            $query = "SELECT auth FROM utilisateurs";
+            
+            $stmt = $conn->query($query);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $logged = false;
+            foreach ($results as $row) {
+                $authValue = $row['auth'];
+                
+                if($authValue == true)
+                {
+                    $logged = true;
+                    break;
+                }
+            }
+
+            if($logged == false)
+            {
+                header("Location: login.html");
+                exit;
+            }
+        } catch(PDOException $e) {
+            echo "Erreur de connexion à la base de données : " . $e->getMessage();
+        }
+    }
+?>
 <html>
     <head>
         <title>PurifEye : Historique</title>
@@ -181,11 +218,15 @@
     </script>
     <script src="histo.js"></script>
     <?php
-    if($tab == "overview"){
+    if(isset($_GET["tab"]) && !empty($_GET["tab"]))
+    {
+        if($tab == "overview"){
         ?>  
             <script src="all_histo.js"></script>
         <?php
+        }
     }
+
     ?>
     
 </html>

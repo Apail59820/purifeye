@@ -1,5 +1,57 @@
 var data = [];
 
+var pm1Data = [];
+var pm2p5Data = [];
+var pm10Data = [];
+
+async function fetch_pm1() {
+    
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM/1");
+    const dbData = await response.json();
+    const tData = dbData.map(row => {
+      return {
+        value: row.value,
+        timestamp: new Date(row.createdAt).getTime()
+      };
+    });
+
+    pm1Data = tData;
+
+    return tData;
+}
+
+async function fetch_pm2p5() {
+    
+  const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM/2p5");
+  const dbData = await response.json();
+  const tData = dbData.map(row => {
+    return {
+      value: row.value,
+      timestamp: new Date(row.createdAt).getTime()
+    };
+  });
+
+  pm2p5Data = tData;
+
+  return tData;
+}
+
+async function fetch_pm10() {
+    
+  const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM/10");
+  const dbData = await response.json();
+  const tData = dbData.map(row => {
+    return {
+      value: row.value,
+      timestamp: new Date(row.createdAt).getTime()
+    };
+  });
+
+  pm10Data = tData;
+
+  return tData;
+}
+
 const form = document.getElementById("filter-form");
 const subtype = form.getAttribute("subtype");
 
@@ -34,12 +86,6 @@ else if(subtype == "cov"){
     fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/COV";
     borderColor = 'rgb(153, 102, 255)';
     backgroundColor = 'rgba(153, 102, 255, 0.2)';
-}
-else if(subtype == "pm"){
-    indexName = "Particules Fines (µg/m³)";
-    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/PM";
-    borderColor = 'rgb(75, 192, 192)';
-    backgroundColor = 'rgba(75, 192, 192, 0.2)';
 }
 
 var TempValues = [];
@@ -97,6 +143,31 @@ function createChart(chartData, timestampData) {
             yAxisID: 'y-axis-2',
             tension: 0.2,
         });
+    }else if (subtype === "pm")
+    {
+        fdatasets.push({
+            label: 'Particules 1µm (µg/m³)',
+            data: pm1Data.map(entry => entry.value),
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.4,
+        });
+    
+        fdatasets.push({
+            label: 'Particules 2.5µm (µg/m³)',
+            data: pm2p5Data.map(entry => entry.value),
+            borderColor: 'rgb(75, 142, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.4,
+        });
+    
+      fdatasets.push({
+          label: 'Particules 10µm (µg/m³)',
+          data: pm10Data.map(entry => entry.value),
+          borderColor: 'rgb(75, 92, 192)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          tension: 0.4,
+      });
     }
     else{
         fdatasets.push({
@@ -153,6 +224,16 @@ function computeStats(data, startTimestamp, endTimestamp) {
         minTemp: minTemp,
         avgTemp: avgTemp,
     };
+}
+
+async function fetchDatas() {
+    await Promise.all([
+      fetch_pm1(),
+      fetch_pm2p5(),
+      fetch_pm10()
+    ]);
+
+    loadDBValues();
 }
 
 function loadDBValues() {
@@ -232,8 +313,6 @@ function loadDBValues() {
                 });
     }).catch(error => console.error(error));
 }
-loadDBValues();
-
 
 
 function updateChartData(chart, data, startDate, endDate) {
@@ -275,3 +354,5 @@ document.getElementById('filter-form').addEventListener('change', (event) => {
 
     updateChartData(mychart, data, startDate, endDate);
 });
+
+fetchDatas();

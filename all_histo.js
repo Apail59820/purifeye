@@ -3,8 +3,9 @@ var humData = [];
 var co2Data = [];
 var no2Data = [];
 var covData = [];
-var pmData = [];
-
+var pm1Data = [];
+var pm2p5Data = [];
+var pm10Data = [];
 
 async function fetch_temp() {
 
@@ -87,9 +88,9 @@ async function fetch_cov() {
     return tData;
 }
 
-async function fetch_pm() {
+async function fetch_pm1() {
     
-    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM");
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM/1");
     const dbData = await response.json();
     const tData = dbData.map(row => {
       return {
@@ -98,9 +99,41 @@ async function fetch_pm() {
       };
     });
 
-    pmData = tData;
+    pm1Data = tData;
 
     return tData;
+}
+
+async function fetch_pm2p5() {
+    
+  const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM/2p5");
+  const dbData = await response.json();
+  const tData = dbData.map(row => {
+    return {
+      value: row.value,
+      timestamp: new Date(row.createdAt).getTime()
+    };
+  });
+
+  pm2p5Data = tData;
+
+  return tData;
+}
+
+async function fetch_pm10() {
+    
+  const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/PM/10");
+  const dbData = await response.json();
+  const tData = dbData.map(row => {
+    return {
+      value: row.value,
+      timestamp: new Date(row.createdAt).getTime()
+    };
+  });
+
+  pm10Data = tData;
+
+  return tData;
 }
 
 function formatTimestamp(timestamp) {
@@ -113,7 +146,7 @@ function formatTimestamp(timestamp) {
 
 function createChart() {
 
-    const timestampData = pmData.map(entry => entry.timestamp);
+    const timestampData = pm10Data.map(entry => entry.timestamp);
 
     const formattedTimestamps = timestampData.map(timestamp => {
         return formatTimestamp(timestamp);
@@ -164,13 +197,28 @@ function createChart() {
     });
 
     fdatasets.push({
-        label: 'Particules Fines (µg/m³)',
-        data: pmData.map(entry => entry.value),
+        label: 'Particules 1µm (µg/m³)',
+        data: pm1Data.map(entry => entry.value),
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         tension: 0.4,
     });
 
+    fdatasets.push({
+        label: 'Particules 2.5µm (µg/m³)',
+        data: pm2p5Data.map(entry => entry.value),
+        borderColor: 'rgb(75, 142, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        tension: 0.4,
+    });
+
+  fdatasets.push({
+      label: 'Particules 10µm (µg/m³)',
+      data: pm10Data.map(entry => entry.value),
+      borderColor: 'rgb(75, 92, 192)',
+      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      tension: 0.4,
+  });
     const chart = new Chart('chart_all', {
         type: 'line',
         data: {
@@ -201,7 +249,9 @@ async function fetchData() {
       fetch_co2(),
       fetch_no2(),
       fetch_cov(),
-      fetch_pm()
+      fetch_pm1(),
+      fetch_pm2p5(),
+      fetch_pm10()
     ]);
     
     createChart();
