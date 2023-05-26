@@ -87,6 +87,9 @@ else if(subtype == "cov"){
     borderColor = 'rgb(153, 102, 255)';
     backgroundColor = 'rgba(153, 102, 255, 0.2)';
 }
+else if(subtype = "pm"){
+    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/PM";
+}
 
 var TempValues = [];
 var abs_hum = [];
