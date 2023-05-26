@@ -226,17 +226,7 @@ function computeStats(data, startTimestamp, endTimestamp) {
     };
 }
 
-async function fetchDatas() {
-    await Promise.all([
-      fetch_pm1(),
-      fetch_pm2p5(),
-      fetch_pm10()
-    ]);
-
-    loadDBValues();
-}
-
-function loadDBValues() {
+async function loadDBValues() {
 
     fetch("https://purifeye-app.herokuapp.com/api/entries/temperature")
         .then(response => response.json())
@@ -312,6 +302,16 @@ function loadDBValues() {
                     minSpan.innerHTML = minTemp;
                 });
     }).catch(error => console.error(error));
+}
+
+async function fetchDatas() {
+    await Promise.all([
+      fetch_pm1(),
+      fetch_pm2p5(),
+      fetch_pm10()
+    ]);
+
+    loadDBValues();
 }
 
 
