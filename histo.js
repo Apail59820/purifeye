@@ -397,6 +397,11 @@ async function loadDBValues() {
 
 async function fetchDatas() {
     await Promise.all([
+      fetch_temp(),
+      fetch_hum(),
+      fetch_co2(),
+      fetch_no2(),
+      fetch_cov(),
       fetch_pm1(),
       fetch_pm2p5(),
       fetch_pm10()
