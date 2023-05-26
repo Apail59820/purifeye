@@ -1,8 +1,94 @@
 var data = [];
 
+var tempData = [];
+var humData = [];
+var co2Data = [];
+var no2Data = [];
+var covData = [];
 var pm1Data = [];
 var pm2p5Data = [];
 var pm10Data = [];
+
+async function fetch_temp() {
+
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/temperature");
+    const dbData = await response.json();
+    const tData = dbData.map(row => {
+      return {
+        value: row.value,
+        timestamp: new Date(row.createdAt).getTime()
+      };
+    });
+
+    tempData = tData;
+
+    return tData;
+}
+  
+
+async function fetch_hum() {
+    
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/humidity");
+    const dbData = await response.json();
+    const tData = dbData.map(row => {
+      return {
+        value: row.value,
+        timestamp: new Date(row.createdAt).getTime()
+      };
+    });
+
+    humData = tData;
+
+    return tData;
+}
+
+async function fetch_co2() {
+    
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/CO2");
+    const dbData = await response.json();
+    const tData = dbData.map(row => {
+      return {
+        value: row.value,
+        timestamp: new Date(row.createdAt).getTime()
+      };
+    });
+
+    co2Data = tData;
+
+    return tData;
+}
+
+async function fetch_no2() {
+    
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/NO2");
+    const dbData = await response.json();
+    const tData = dbData.map(row => {
+      return {
+        value: row.value,
+        timestamp: new Date(row.createdAt).getTime()
+      };
+    });
+
+    no2Data = tData;
+
+    return tData;
+}
+
+async function fetch_cov() {
+    
+    const response = await fetch("https://purifeye-app.herokuapp.com/api/entries/COV");
+    const dbData = await response.json();
+    const tData = dbData.map(row => {
+      return {
+        value: row.value,
+        timestamp: new Date(row.createdAt).getTime()
+      };
+    });
+
+    covData = tData;
+
+    return tData;
+}
 
 async function fetch_pm1() {
     
@@ -60,37 +146,6 @@ var fetchUrl;
 var borderColor;
 var backgroundColor;
 
-if(subtype == "temperature"){
-    indexName = "Température (°C)";
-    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/temperature";
-    borderColor = 'rgb(255, 99, 132)';
-    backgroundColor = 'rgba(255, 99, 132, 0.2)';
-}
-else if(subtype == "humidity"){
-    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/humidity";
-}
-else if(subtype == "co2"){
-    indexName = "CO2 (ppm)";
-    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/CO2";
-    borderColor = 'rgb(255, 192, 0)';
-    backgroundColor = 'rgba(255, 192, 0, 0.2)';
-}
-else if(subtype == "no2"){
-    indexName = "NO2 (ppm)";
-    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/NO2";
-    borderColor = 'rgb(255, 159, 64)';
-    backgroundColor = 'rgba(255, 159, 64, 0.2)';
-}
-else if(subtype == "cov"){
-    indexName = "COV (ppb)";
-    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/COV";
-    borderColor = 'rgb(153, 102, 255)';
-    backgroundColor = 'rgba(153, 102, 255, 0.2)';
-}
-else if(subtype == "pm"){
-    fetchUrl = "https://purifeye-app.herokuapp.com/api/entries/PM";
-}
-
 var TempValues = [];
 var abs_hum = [];
 
@@ -128,16 +183,26 @@ function createChart(chartData, timestampData) {
 
     let fdatasets = [];
 
-
-    if (subtype === "humidity") {
+    if(subtype == "temperature")
+    {
         fdatasets.push({
-            label: "Humidité relative (%)",
-            data: chartData,
+            label: 'Température (°C)',
+            data: tempData.map(entry => entry.value),  
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            tension: 0.4,
+        });
+    }
+    else if(subtype == "humidity")
+    {
+        fdatasets.push({
+            label: 'Humidité relative (%)',
+            data: humData.map(entry => entry.value),
             borderColor: 'rgb(99, 99, 255)',
             backgroundColor: 'rgba(99, 99, 255, 0.2)',
-            yAxisID: 'y-axis-1',
-            tension: 0.2,
+            tension: 0.4,
         });
+
         fdatasets.push({
             label: "Humidité absolue (g/m³)",
             data: abs_hum,
@@ -146,7 +211,38 @@ function createChart(chartData, timestampData) {
             yAxisID: 'y-axis-2',
             tension: 0.2,
         });
-    }else if (subtype === "pm")
+    }
+    else if(subtype == "co2")
+    {
+        fdatasets.push({
+            label: 'CO2 (ppm)',
+            data: co2Data.map(entry => entry.value),
+            borderColor: 'rgb(255, 192, 0)',
+            backgroundColor: 'rgba(255, 192, 0, 0.2)',
+            tension: 0.4,
+        });
+    }
+    else if(subtype == "no2")
+    {
+        fdatasets.push({
+            label: 'NO2 (ppm)',
+            data: no2Data.map(entry => entry.value),
+            borderColor: 'rgb(255, 159, 64)',
+            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+            tension: 0.4,
+        });
+    }
+    else if(subtype == "cov")
+    {
+        fdatasets.push({
+            label: 'COV (ppb)',
+            data: covData.map(entry => entry.value),
+            borderColor: 'rgb(153, 102, 255)',
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            tension: 0.4,
+        });
+    }
+    else if(subtype == "pm")
     {
         fdatasets.push({
             label: 'Particules 1µm (µg/m³)',
@@ -171,15 +267,6 @@ function createChart(chartData, timestampData) {
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           tension: 0.4,
       });
-    }
-    else{
-        fdatasets.push({
-            label: indexName,
-            data: chartData,
-            borderColor: borderColor,
-            backgroundColor: backgroundColor,
-            tension: 0.4,
-        });
     }
 
     const chart = new Chart('chart', {
@@ -229,83 +316,83 @@ function computeStats(data, startTimestamp, endTimestamp) {
     };
 }
 
-async function loadDBValues() {
+async function loadDBValues() {    
+    if(subtype == "humidity")
+        computeAbsoluteHumidity(humData, tempData);
 
-    fetch("https://purifeye-app.herokuapp.com/api/entries/temperature")
-        .then(response => response.json())
-        .then(dbData => {
-            console.log(dbData);
-            const tData = dbData.map(row => {
-                return {
-                    value: row.value,
-                    timestamp: new Date(row.createdAt).getTime()
-                }
-            });
-            TempValues = tData;
-            fetch(fetchUrl)
-                .then(response => response.json())
-                .then(dbData => {
-                    const newData = dbData.map(row => {
-                        return {
-                            value: row.value,
-                            timestamp: new Date(row.createdAt).getTime()
-                        }
-                    });
-                    data = newData;
-                    
-                    if(subtype == "humidity")
-                        computeAbsoluteHumidity(newData, TempValues);
+    if(subtype == "temperature")
+    {
+        data = tempData;
+    }
+    else if(subtype == "humidity")
+    {
+        data = humData;
+    }
+    else if(subtype == "co2")
+    {
+        data = co2Data;
+    }
+    else if(subtype == "no2")
+    {
+        data = no2Data;
+    }
+    else if(subtype == "cov")
+    {
+        data = covData;
+    }
+    else if(subtype == "pm")
+    {
+        data = pm1Data;
+    }
 
-                    const chartData = data.map(entry => entry.value);
-                    const timestampData = data.map(entry => entry.timestamp);
-                    mychart = createChart(chartData, timestampData);
+    const chartData = data.map(entry => entry.value);
+    const timestampData = data.map(entry => entry.timestamp);
+    mychart = createChart(chartData, timestampData);
 
-                    const timestamps = data.map(obj => obj.timestamp);
+    const timestamps = data.map(obj => obj.timestamp);
 
-                    for (let ts = 0; ts < timestamps.length; ts++) {
-                        const option = document.createElement('option');
-                        option.text = new Date(timestamps[ts]).toLocaleString('fr-FR', {
-                            day: 'numeric',
-                            month: 'numeric',
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            second: 'numeric'
-                        });
-                        option.value = timestamps[ts];
-                        selectStart.add(option);
+    for (let ts = 0; ts < timestamps.length; ts++) {
+        const option = document.createElement('option');
+        option.text = new Date(timestamps[ts]).toLocaleString('fr-FR', {
+            day: 'numeric',
+            month: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        });
+        option.value = timestamps[ts];
+        selectStart.add(option);
 
 
-                        const endOption = document.createElement('option');
-                        endOption.text = new Date(timestamps[ts]).toLocaleString('fr-FR', {
-                            day: 'numeric',
-                            month: 'numeric',
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            second: 'numeric'
-                        });
-                        endOption.value = timestamps[ts];
-                        selectEnd.add(endOption);
-                    }
+        const endOption = document.createElement('option');
+        endOption.text = new Date(timestamps[ts]).toLocaleString('fr-FR', {
+            day: 'numeric',
+            month: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        });
+        endOption.value = timestamps[ts];
+        selectEnd.add(endOption);
+    }
 
-                    selectStart.value = timestamps[0];
+    selectStart.value = timestamps[0];
 
-                    selectEnd.value = timestamps[timestamps.length - 1];
+    selectEnd.value = timestamps[timestamps.length - 1];
 
-                    let stats = computeStats(data, timestamps[0], timestamps[timestamps.length - 1]);
+    let stats = computeStats(data, timestamps[0], timestamps[timestamps.length - 1]);
 
-                    var peakTemp = stats.maxTemp;
-                    var avgTemp = stats.avgTemp;
-                    var minTemp = stats.minTemp;
+    var peakTemp = stats.maxTemp;
+    var avgTemp = stats.avgTemp;
+    var minTemp = stats.minTemp;
 
-                    var peakSpan = document.getElementById("peakvalue");
-                    var avgSpan = document.getElementById("avgvalue");
-                    var minSpan = document.getElementById("minvalue");
+    var peakSpan = document.getElementById("peakvalue");
+    var avgSpan = document.getElementById("avgvalue");
+    var minSpan = document.getElementById("minvalue");
 
-                    peakSpan.innerHTML = peakTemp;
-                    avgSpan.innerHTML = avgTemp.toFixed(2);
-                    minSpan.innerHTML = minTemp;
-                });
-    }).catch(error => console.error(error));
+    peakSpan.innerHTML = peakTemp;
+    avgSpan.innerHTML = avgTemp.toFixed(2);
+    minSpan.innerHTML = minTemp;
 }
 
 async function fetchDatas() {
