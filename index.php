@@ -1,5 +1,5 @@
 <?php
-    if(isset($_SESSION['auth']) && !empty($_SESSION['auth']))
+    /* if(isset($_SESSION['auth']) && !empty($_SESSION['auth']))
     {
         $servername = "eu-cdbr-west-03.cleardb.net"; 
         $username = "b5b39d52f466ad"; 
@@ -33,7 +33,7 @@
         } catch(PDOException $e) {
             echo "Erreur de connexion à la base de données : " . $e->getMessage();
         }
-    }
+    }*/
 ?>
 <html>
     <head>
