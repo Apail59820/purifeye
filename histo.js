@@ -231,6 +231,7 @@ async function loadDBValues() {
     fetch("https://purifeye-app.herokuapp.com/api/entries/temperature")
         .then(response => response.json())
         .then(dbData => {
+            console.log(dbData);
             const tData = dbData.map(row => {
                 return {
                     value: row.value,
