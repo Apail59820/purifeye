@@ -10,7 +10,7 @@
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        $query = "SELECT * FROM utilisateurs";
+        $query = "SELECT * FROM users";
         
         $stmt = $conn->query($query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
