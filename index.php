@@ -1,21 +1,53 @@
 <?php
     session_start();
-    
-    $servername = "eu-cdbr-west-03.cleardb.net"; 
-    $username = "b5b39d52f466ad"; 
-    $password = "eab3317c"; 
-    $dbname = "heroku_56366cbee5ccd56";
+    if(isset($_SESSION['auth']) && !empty($_SESSION['auth']))
+    {
+        if(!isset($_SESSION['authid']) || empty($_SESSION['authid'])){
+            header("Location: login.html");
+            exit;
+        }
+        $session_token = $_SESSION['auth'];
+        $session_token_id = $_SESSION['authid'];
 
-    try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        $query = "SELECT * FROM users";
-        
-        $stmt = $conn->query($query);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch(PDOException $e) {
-        echo "Erreur de connexion à la base de données : " . $e->getMessage();
+        $servername = "eu-cdbr-west-03.cleardb.net"; 
+        $username = "b5b39d52f466ad"; 
+        $password = "eab3317c"; 
+        $dbname = "heroku_56366cbee5ccd56";
+
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            $query = "SELECT * FROM users WHERE id=:id";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam('id', $session_token_id);
+            $stmt->execute();
+
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $logged = false;
+            foreach ($results as $row) {
+                $token = $row['auth'];
+
+                if($token == $session_token)
+                {
+                    $username = $row['username'];
+                    $logged = true;
+                    break;
+                }
+            }
+
+            if($logged == false)
+            {
+                header("Location: login.html");
+                exit;
+            }
+        } catch(PDOException $e) {
+            echo "Erreur de connexion à la base de données : " . $e->getMessage();
+        }
+    }
+    else{
+        header("Location: login.html");
+        exit;
     }
 ?>
 <html>
@@ -32,7 +64,7 @@
               <h1>PurifEye</h1>
             </div>
             <ul class="navbar-menu">
-              <li><a href="#">Utilisateur</a></li>
+              <li><a href="#"><?php echo $username;?></a></li>
               <li><a href="?tab=overview">Historique</a></li>
               <li><a href="#">Administrateur</a></li>
             </ul>
